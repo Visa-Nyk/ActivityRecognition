@@ -1,0 +1,7 @@
+__pycache__
+.ipynb_checkpoints
+data
+rotated_data
+features
+*.csv
+*.pickle
