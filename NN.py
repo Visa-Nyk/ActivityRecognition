@@ -48,20 +48,20 @@ class Net(nn.Module):
         return num_features
     
     
-def train(dataset):
+def train(dataset, n_epochs = 10):
     net=Net()
     load_data=DatasetFromListOfDicts(dataset)
-    dataloader= torch.utils.data.DataLoader(load_data, batch_size=10,shuffle=True, num_workers=2)
+    dataloader= torch.utils.data.DataLoader(load_data, batch_size=10,shuffle=True)
     criterion = nn.CrossEntropyLoss()
     
     LR=0.001
     optimizer = optim.Adam(net.parameters(), lr=LR)
     
-    for epoch in range(10):  # loop over the dataset multiple times
+    for epoch in range(n_epochs):  # loop over the dataset multiple times
+        print(f"epoch: {epoch + 1}/{n_epochs}")
         if epoch and epoch%5==0:
             LR=.1*LR
             optimizer=optim.Adam(net.parameters(),lr=LR)
-        running_loss = 0.0
         for i, data in enumerate(dataloader):
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
@@ -75,11 +75,6 @@ def train(dataset):
             loss.backward()
             optimizer.step()
     
-            running_loss += loss.item()
-            if i % 100 == 99:   
-                print('[%d, %5d] loss: %.3f' %
-                    (epoch + 1, i + 1, running_loss / 2000))
-                running_loss = 0.0
     
     print('Finished Training')
     return net
